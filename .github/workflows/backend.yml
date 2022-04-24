@@ -1,0 +1,143 @@
+name: BACKEND CI / CD
+
+on:
+    # push:
+    #     branches: [main]
+    #     paths:
+    #         - "backend/**"
+    workflow_dispatch:
+
+jobs:
+    Test:
+        runs-on: ubuntu-latest
+        environment: Staging
+        defaults:
+            run:
+                working-directory: backend
+
+        strategy:
+            matrix:
+                node-version: [16.x]
+                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+                mongodb-version: ["4.2"]
+
+        steps:
+            - name: Git checkout
+              uses: actions/checkout@v2
+
+            - name: set environment variables
+              uses: allenevans/set-env@v2.0.0
+              with:
+                  MONGO_TEST_URI: ${{ secrets.MONGO_URI }}
+                  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+                  AUTH_COOKIE_NAME: ${{ secrets.AUTH_COOKIE_NAME }}
+                  PORT: ${{ secrets.PORT }}
+                  DEFAULT_ADMIN_NAME: ${{ secrets.DEFAULT_ADMIN_NAME }}
+                  DEFAULT_ADMIN_EMAIL: ${{ secrets.DEFAULT_ADMIN_EMAIL }}
+                  DEFAULT_ADMIN_PASSWORD: ${{ secrets.DEFAULT_ADMIN_PASSWORD }}
+
+            - uses: actions/checkout@v2
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "npm"
+                  cache-dependency-path: backend/package-lock.json
+            - name: Start MongoDB
+              uses: supercharge/mongodb-github-action@1.7.0
+            - run: npm ci
+            - run: npm run test:staging
+
+    Storing-previous-image-with-new-tag:
+        needs: Test
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+
+            - name: Login to DockerHub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Set outputs
+              id: vars
+              run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+            - name: Check outputs
+              run: echo ${{ steps.vars.outputs.sha_short }}
+
+            - name: Retag latest image to outputs.sha_shorts
+              run: |
+                  docker pull ${{secrets.BACKEND_DOCKER_IMAGE}}:latest
+                  docker tag ${{secrets.BACKEND_DOCKER_IMAGE}}:latest ${{secrets.BACKEND_DOCKER_IMAGE}}:${{ steps.vars.outputs.sha_short }}
+                  docker push ${{secrets.BACKEND_DOCKER_IMAGE}}:${{ steps.vars.outputs.sha_short }}
+
+    Build-and-push-image:
+        needs: Test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+
+            - name: Login to DockerHub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v2
+              with:
+                  context: backend
+                  push: true
+                  tags: ${{secrets.BACKEND_DOCKER_IMAGE}}:latest
+                  secrets: |
+                      PORT=${{ secrets.PORT }}
+
+    Deploy-To-SERVER:
+        needs: Build-and-push-image
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: multiple command
+              uses: appleboy/ssh-action@master
+              env:
+                  IMAGE: ${{secrets.DOCKERHUB_IMAGE}}
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.HOST_USER }}
+                  password: ${{ secrets.HOST_KEY }}
+                  envs: IMAGE
+                  script: |
+                      docker image rm $IMAGE:latest -f
+                      cd app
+                      docker-compose pull
+                      docker stack deploy -c docker-compose.yml appv1
+    CLEANING-CONTAINERS-AND-IMAGES-ON-SERVER:
+        needs: Deploy-To-SERVER
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Removing All dangling images and containers after updating the images to latest
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.HOST_USER }}
+                  password: ${{ secrets.HOST_KEY }}
+                  script: |
+                      docker rm $(docker ps -a -f status=exited)
+                      docker image prune -a -f

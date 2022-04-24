@@ -1,0 +1,128 @@
+name: FRONTEND CI / CD
+
+on:
+    # push:
+    #     branches: [main]
+    #     paths:
+    #         - "frontend/**"
+    workflow_dispatch:
+
+jobs:
+    Next-build:
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: frontend
+        strategy:
+            matrix:
+                node-version: [16.x] # Using node version 16
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - run: npm ci # Install dependencies
+            - run: npm run build # Build from source code
+              env:
+                  NEXT_PUBLIC_API_URL: ${{secrets.NEXT_PUBLIC_API_URL}}
+            - name: Upload Next build # Upload the artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  name: build
+                  path: |
+                      frontend/.next
+                      frontend/public
+                  retention-days: 7 # Days for artifact to be retained
+
+    Storing-previous-image-with-new-tag:
+        needs: Next-build
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+            - name: Login to DockerHub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Set outputs
+              id: vars
+              run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+            - name: Check outputs
+              run: echo ${{ steps.vars.outputs.sha_short }}
+            - name: Retag latest image to outputs.sha_shorts
+              run: |
+                  docker pull ${{secrets.FRONTEND_DOCKER_IMAGE}}:latest
+                  docker tag ${{secrets.FRONTEND_DOCKER_IMAGE}}:latest ${{secrets.FRONTEND_DOCKER_IMAGE}}:${{ steps.vars.outputs.sha_short }}
+                  docker push ${{secrets.FRONTEND_DOCKER_IMAGE}}:${{ steps.vars.outputs.sha_short }}
+
+    Build-and-push-image:
+        needs: Next-build # Forcing code below to run only when Next-build job above is successful
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Download next build # Download the above uploaded artifact
+              uses: actions/download-artifact@v2
+              with:
+                  name: build
+                  path: frontend
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v1
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v1
+
+            - name: Login to DockerHub
+              uses: docker/login-action@v1
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+            - name: Build and push
+              uses: docker/build-push-action@v2
+              with:
+                  context: frontend
+                  push: true
+                  tags: ${{secrets.FRONTEND_DOCKER_IMAGE}}:latest
+    Deploy-To-SERVER:
+        needs: Build-and-push-image
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: multiple command
+              uses: appleboy/ssh-action@master
+              env:
+                  IMAGE: ${{secrets.FRONTEND_DOCKER_IMAGE}}
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.HOST_USER }}
+                  password: ${{ secrets.HOST_KEY }}
+                  envs: IMAGE
+                  script: |
+                      docker image rm $IMAGE:latest -f
+                      cd app
+                      docker-compose pull
+                      docker stack deploy -c docker-compose.yml appv1
+    Cleaning-containes-and-dangling-images:
+        needs: Deploy-To-SERVER
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Removing All dangling images and containers after updating the images to latest
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.HOST_USER }}
+                  password: ${{ secrets.HOST_KEY }}
+                  script: |
+                      docker rm $(docker ps -a -f status=exited)
+                      docker image prune -a -f
