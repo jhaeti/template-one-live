@@ -1,5 +1,7 @@
-# TEMPLATE
+# PLEASE FOLLOW THE GUIDE IN OTHER
 My template for all pojects
+
+## NOTE: If you dont want the ci / cd set up remove the .github folder in the root and dont do the configuration below that says CI/CD
 
 ### For Eslint to work perfectly as prefered
 - You need to open frontend and backend folder in separate windows.
@@ -79,10 +81,6 @@ HOST_KEY
 HOST_USER
 NEXT_PUBLIC_API_URL
 PORT
-```
-#### To run backend in development.
-```sh
-npm run dev
 ```
 #### - Uncomment push events in backend.yml and frontend.yml in .github/workflow directory
 #### - Then pushing to the remote github repositoy should fire the events in the workflow directory
