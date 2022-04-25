@@ -1,25 +1,34 @@
 {
-    "name": "boiler-plate",
-    "version": "1.0.0",
-    "description": "Boiler-plate for nextjs websites",
-    "main": "server.js",
-    "scripts": {
-        "dev": "next",
-        "build": "next build",
-        "start": "next start"
-    },
-    "author": "ti jhae",
-    "license": "ISC",
-    "dependencies": {
-        "axios": "^0.21.1",
-        "next": "^12.1.5",
-        "next-redux-wrapper": "^6.0.2",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "react-redux": "^7.2.4",
-        "redux": "^4.1.0",
-        "redux-devtools-extension": "^2.13.9",
-        "redux-thunk": "^2.3.0",
-        "sass": "^1.34.0"
-    }
+	"name": "boiler-plate",
+	"version": "1.0.0",
+	"description": "Boiler-plate for nextjs websites",
+	"main": "server.js",
+	"scripts": {
+		"build": "next build",
+		"dev": "next",
+		"lint": "next lint",
+		"start": "next start"
+	},
+	"author": "ti jhae",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^0.21.1",
+		"next": "^12.1.5",
+		"next-redux-wrapper": "^6.0.2",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"react-redux": "^7.2.4",
+		"redux": "^4.1.0",
+		"redux-devtools-extension": "^2.13.9",
+		"redux-thunk": "^2.3.0",
+		"sass": "^1.34.0"
+	},
+	"devDependencies": {
+		"eslint": "^8.14.0",
+		"eslint-config-airbnb-base": "^15.0.0",
+		"eslint-config-next": "12.1.5",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-import": "^2.26.0",
+		"prettier": "^2.6.2"
+	}
 }
