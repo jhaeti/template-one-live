@@ -15,10 +15,10 @@ const app = express();
 app.use(cookieParser());
 
 app.use(
-    cors({
-        origin: true,
-        credentials: true,
-    })
+	cors({
+		origin: true,
+		credentials: true,
+	})
 );
 
 app.use(express.json({ extended: false }));
