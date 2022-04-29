@@ -1,34 +1,30 @@
-import { createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
+import { legacy_createStore as createStore, applyMiddleware } from "redux";
 import { HYDRATE, createWrapper } from "next-redux-wrapper";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
+
 import rootReducer from "./reducers/rootReducer";
 
 const bindMiddleware = (middleware) => {
-  if (process.env.NODE_ENV !== "production") {
-    const { composeWithDevTools } = require("redux-devtools-extension");
-    return composeWithDevTools(applyMiddleware(...middleware));
-  }
-  return applyMiddleware(...middleware);
+	if (process.env.NODE_ENV !== "production") {
+		return composeWithDevTools(applyMiddleware(...middleware));
+	}
+	return applyMiddleware(...middleware);
 };
 
 const reducer = (state, action) => {
-  if (action.type === HYDRATE) {
-    const nextState = {
-      ...state, // use previous state
-      ...action.payload, // apply delta from hydration
-    };
-    if (state) {
-      nextState = state;
-      console.log("But nothing in there");
-    }
-    return nextState;
-  } else {
-    return rootReducer(state, action);
-  }
+	if (action.type === HYDRATE) {
+		const nextState = {
+			...state, // use previous state
+			...action.payload, // apply delta from hydration
+		};
+		return nextState;
+	}
+	return rootReducer(state, action);
 };
 
-const initStore = () => {
-  return createStore(reducer, bindMiddleware([thunk]));
-};
+const makeStore = () => createStore(reducer, bindMiddleware([thunk]));
 
-export const wrapper = createWrapper(initStore);
+const wrapper = createWrapper(makeStore);
+
+export default wrapper;

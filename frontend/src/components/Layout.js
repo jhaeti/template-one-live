@@ -22,6 +22,7 @@ const Layout = ({ children, title, description }) => (
 		<Navbar />
 		<div className="col-fill-between">
 			<Alert />
+
 			{children}
 		</div>
 		<Footer />

@@ -1,40 +1,32 @@
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import { useEffect } from "react";
 import Layout from "../components/Layout";
 
-import { getItems } from "../redux/actions/itemAction";
+import useFetch from "../contex/useFetch";
 import { loadUser } from "../redux/actions/userAction";
 
 import Items from "../components/Items";
 import AddItem from "../components/AddItem";
 
-class Index extends Component {
-	componentDidMount() {
-		this.props.getItems();
-		// Try to load the user when the component mounts
-		this.props.loadUser();
-	}
+const Index = ({ loadUser, isAuthenticated }) => {
+	const { data } = useFetch("/users/me");
 
-	// eslint-disable-next-line class-methods-use-this
-	render() {
-		return (
-			<Layout
-				title="Boilerplate"
-				description="Homepage for the Boilerplate"
-			>
-				<AddItem />
-				<div className="container">
-					<Items />
-				</div>
-			</Layout>
-		);
-	}
-}
+	useEffect(() => {
+		if (data) {
+			loadUser(data);
+		}
+	}, [data, loadUser]);
 
-const mapDispatchToProps = (dispatch) => ({
-	getItems: bindActionCreators(getItems, dispatch),
-	loadUser: bindActionCreators(loadUser, dispatch),
+	return (
+		<Layout title="Boilerplate" description="Homepage for the Boilerplate">
+			<AddItem />
+			<div className="container">{isAuthenticated && <Items />}</div>
+		</Layout>
+	);
+};
+
+const mapStateToProps = (state) => ({
+	isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(null, mapDispatchToProps)(Index);
+export default connect(mapStateToProps, { loadUser })(Index);

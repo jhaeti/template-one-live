@@ -6,6 +6,7 @@
 	"extends": [
 		"airbnb-base",
 		"eslint:recommended",
+		"plugin:react-redux/recommended",
 		"next/core-web-vitals",
 		"prettier"
 	],

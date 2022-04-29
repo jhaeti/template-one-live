@@ -30,12 +30,8 @@ const AddItem = ({ isAuthenticated, addItem }) => {
 						value={item}
 					/>
 					<button className="add-item__submit-button">
-						{/* <img
-							src="/icons/plus.svg"
-							alt="Add item Icon"
-							className="add-item__icon"
-						/> */}
 						<Image
+							priority="true"
 							src="/icons/plus.svg"
 							alt="Add item Icon"
 							className="add-item__icon"
@@ -52,5 +48,6 @@ const AddItem = ({ isAuthenticated, addItem }) => {
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
 });
+const mapDispatchToProps = { addItem };
 
-export default connect(mapStateToProps, { addItem })(AddItem);
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem);

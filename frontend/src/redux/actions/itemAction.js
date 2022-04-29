@@ -5,6 +5,7 @@ export const GET_ITEMS = "GET_ITEMS";
 export const IS_LOADING = "IS_LOADING";
 export const ADD_ITEM = "ADD_ITEM";
 export const DELETE_ITEM = "DELETE_ITEM";
+export const CLEAR_ITEMS = "CLEAR_ITEMS";
 
 const apiUrl =
 	process.env.NODE_ENV === "production"
@@ -12,16 +13,15 @@ const apiUrl =
 		: process.env.NEXT_PUBLIC_API_DEV_URL;
 
 // Get all items in database
-export const getItems = () => (dispatch) => {
-	dispatch({ type: IS_LOADING });
+export const getItems = (data) => ({
+	type: GET_ITEMS,
+	payload: data,
+});
 
-	axios.get(`${apiUrl}/items`, { withCredentials: true }).then((res) =>
-		dispatch({
-			type: GET_ITEMS,
-			payload: res.data,
-		})
-	);
-};
+// Clears all items in database
+export const clearItems = () => ({ type: CLEAR_ITEMS });
+
+export const loadingItems = () => ({ type: IS_LOADING });
 
 // Try to add an item to database
 export const addItem = (name) => (dispatch) => {

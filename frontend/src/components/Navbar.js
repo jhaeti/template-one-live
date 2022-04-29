@@ -2,9 +2,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 // import Menutoggler from "./Menutoggler";
 import { connect } from "react-redux";
+import { clearItems } from "../redux/actions/itemAction";
 import { logout } from "../redux/actions/userAction";
 
-const Navbar = ({ isAuthenticated, logout }) => {
+const Navbar = ({ isAuthenticated, logout, clearItems }) => {
 	const router = useRouter();
 	const isCurrentPage = (path) =>
 		router.pathname === path ? "active nav__link" : "nav__link";
@@ -56,6 +57,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
 										className={isCurrentPage("/login")}
 										onClick={() => {
 											logout();
+											clearItems();
 										}}
 									>
 										Logout
@@ -73,4 +75,4 @@ const Navbar = ({ isAuthenticated, logout }) => {
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
 });
-export default connect(mapStateToProps, { logout })(Navbar);
+export default connect(mapStateToProps, { logout, clearItems })(Navbar);

@@ -1,9 +1,11 @@
 /* eslint-disable default-param-last */
+import { mutate } from "swr";
 import {
 	ADD_ITEM,
 	DELETE_ITEM,
 	GET_ITEMS,
 	IS_LOADING,
+	CLEAR_ITEMS,
 } from "../actions/itemAction";
 
 const initialItemState = {
@@ -35,6 +37,14 @@ const itemReducer = (state = initialItemState, action) => {
 				items: state.items.filter(
 					(item) => item._id !== action.payload
 				),
+			};
+		// Clears the state when a user logs out successfully
+		case CLEAR_ITEMS:
+			// mutate("http://localhost:5000/items");
+			return {
+				...state,
+				items: [],
+				isLoading: false,
 			};
 		default:
 			return state;

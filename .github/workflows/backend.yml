@@ -110,6 +110,7 @@ jobs:
     Deploy-To-SERVER:
         needs: Build-and-push-image
         runs-on: ubuntu-latest
+        environment: Deployment
         steps:
             - uses: actions/checkout@v2
 
