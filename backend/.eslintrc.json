@@ -24,7 +24,10 @@
 		}
 	},
 	"rules": {
+		"consistent-return": "off",
 		"no-console": "off",
+		"no-use-before-define": "off",
+		"func-names": "off",
 		"jest/no-done-callback": "off"
 	}
 }

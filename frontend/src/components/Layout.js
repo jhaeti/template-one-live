@@ -2,6 +2,7 @@ import Head from "next/head";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Alert from "./Alert";
+// import Showname from "./Showname";
 
 const Layout = ({ children, title, description }) => (
 	<div>
@@ -22,7 +23,7 @@ const Layout = ({ children, title, description }) => (
 		<Navbar />
 		<div className="col-fill-between">
 			<Alert />
-
+			{/* <Showname /> */}
 			{children}
 		</div>
 		<Footer />

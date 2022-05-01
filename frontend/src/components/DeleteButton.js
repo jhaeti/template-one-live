@@ -7,4 +7,6 @@ const DeleteButton = ({ deleteItem, id }) => (
 	</button>
 );
 
-export default connect(null, { deleteItem })(DeleteButton);
+const mapDispatchToProps = { deleteItem };
+
+export default connect(null, mapDispatchToProps)(DeleteButton);

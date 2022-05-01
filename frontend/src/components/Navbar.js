@@ -1,12 +1,21 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 // import Menutoggler from "./Menutoggler";
+import { useSWRConfig } from "swr";
 import { connect } from "react-redux";
 import { clearItems } from "../redux/actions/itemAction";
 import { logout } from "../redux/actions/userAction";
+import apiUrl from "../controllers/apiUrl";
 
 const Navbar = ({ isAuthenticated, logout, clearItems }) => {
+	const { mutate } = useSWRConfig();
 	const router = useRouter();
+	const onLogoutClick = () => {
+		logout();
+		clearItems();
+		mutate(`${apiUrl}/items`, [], { rollbackOnError: false });
+		mutate(`${apiUrl}/users/me`, null, { rollbackOnError: false });
+	};
 	const isCurrentPage = (path) =>
 		router.pathname === path ? "active nav__link" : "nav__link";
 	return (
@@ -55,10 +64,7 @@ const Navbar = ({ isAuthenticated, logout, clearItems }) => {
 								<Link href="/login">
 									<a
 										className={isCurrentPage("/login")}
-										onClick={() => {
-											logout();
-											clearItems();
-										}}
+										onClick={onLogoutClick}
 									>
 										Logout
 									</a>
@@ -74,5 +80,9 @@ const Navbar = ({ isAuthenticated, logout, clearItems }) => {
 
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
+	items: state.item.items,
+	user: state.auth.user,
 });
-export default connect(mapStateToProps, { logout, clearItems })(Navbar);
+const mapDispatchToProps = { logout, clearItems };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

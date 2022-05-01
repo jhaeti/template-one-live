@@ -3,6 +3,7 @@
 		"browser": true,
 		"es2021": true
 	},
+	"plugins": ["react-redux"],
 	"extends": [
 		"airbnb-base",
 		"eslint:recommended",
@@ -17,6 +18,9 @@
 	"rules": {
 		"no-shadow": "off",
 		"class-methods-use-this": "off",
-		"no-underscore-dangle": "off"
+		"no-underscore-dangle": "off",
+		"default-param-last": "off",
+		"react-redux/prefer-separate-component-file": "off",
+		"react-hooks/exhaustive-deps": "off"
 	}
 }

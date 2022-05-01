@@ -27,4 +27,6 @@ const mapStateToProps = (state) => ({
 	msg: state.auth.msg,
 });
 
-export default connect(mapStateToProps, { clearMsg })(Alert);
+const mapDispatchToProps = { clearMsg };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Alert);

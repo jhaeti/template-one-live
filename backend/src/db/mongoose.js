@@ -1,13 +1,12 @@
 const mongoose = require("mongoose");
+const User = require("./models/user");
 
 // Getting mongo uri base on environment
 const uri =
-	process.env.NODE_ENV === "production"
-		? process.env.MONGO_URI
-		: process.env.NODE_ENV === "test"
-		? process.env.MONGO_TEST_URI
-		: process.env.MONGO_DEV_URI;
-console.log(uri);
+	(process.env.NODE_ENV === "production" && process.env.MONGO_URI) ||
+	(process.env.NODE_ENV === "test" && process.env.MONGO_TEST_URI) ||
+	process.env.MONGO_DEV_URI;
+
 // Connect to mongoDB
 mongoose
 	.connect(uri, {
@@ -24,7 +23,6 @@ mongoose
 			DEFAULT_ADMIN_PASSWORD: password,
 		} = process.env;
 
-		const User = require("../models/user");
 		const defaultAdminUser = new User({
 			name,
 			email,
@@ -34,6 +32,7 @@ mongoose
 		User.findOne({ email })
 			.then((user) => {
 				if (user === null) {
+					// Returning a promise inside a promise allows for capturinf of next data return by the promise returned in the next .then method
 					return User.find();
 				}
 			})
@@ -48,4 +47,4 @@ mongoose
 			.catch((e) => console.log(e));
 		console.log("Admin is Present...");
 	})
-	.catch(() => console.log("Not connected to mongodb"));
+	.catch((e) => console.log("Not connected to mongodb", e));

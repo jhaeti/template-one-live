@@ -1,24 +1,27 @@
-import { connect } from "react-redux";
 import { useEffect } from "react";
+import { connect } from "react-redux";
+
+import { loadUser } from "../redux/actions/userAction";
 import Layout from "../components/Layout";
 
-import useFetch from "../contex/useFetch";
-import { loadUser } from "../redux/actions/userAction";
+import useFetch from "../hooks/useFetch";
 
 import Items from "../components/Items";
 import AddItem from "../components/AddItem";
+import apiUrl from "../controllers/apiUrl";
 
 const Index = ({ loadUser, isAuthenticated }) => {
-	const { data } = useFetch("/users/me");
+	const url = `${apiUrl}/users/me`;
 
+	const { data } = useFetch(url);
 	useEffect(() => {
 		if (data) {
 			loadUser(data);
 		}
-	}, [data, loadUser]);
+	}, [data]);
 
 	return (
-		<Layout title="Boilerplate" description="Homepage for the Boilerplate">
+		<Layout title="Boilerplate" description="Index for the Boilerplate">
 			<AddItem />
 			<div className="container">{isAuthenticated && <Items />}</div>
 		</Layout>
@@ -28,5 +31,6 @@ const Index = ({ loadUser, isAuthenticated }) => {
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
 });
+const mapDispatchToProps = { loadUser };
 
-export default connect(mapStateToProps, { loadUser })(Index);
+export default connect(mapStateToProps, mapDispatchToProps)(Index);

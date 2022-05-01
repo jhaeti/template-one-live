@@ -1,4 +1,5 @@
 module.exports = {
+	reactStrictMode: true,
 	images: {
 		dangerouslyAllowSVG: true,
 		contentSecurityPolicy:
@@ -10,6 +11,7 @@ module.exports = {
 		ignoreDuringBuilds: true,
 	},
 	webpackDevMiddleware: (config) => {
+		// eslint-disable-next-line no-param-reassign
 		config.watchOptions = {
 			poll: 1000,
 			aggregateTimeout: 300,

@@ -1,20 +1,19 @@
 import { connect } from "react-redux";
-import { mutate } from "swr";
 import { useEffect } from "react";
-import useFetch from "../contex/useFetch";
+import useFetch from "../hooks/useFetch";
 import Item from "./Item";
 import { getItems } from "../redux/actions/itemAction";
+import apiUrl from "../controllers/apiUrl";
 
 const Items = ({ items, getItems }) => {
-	const { data } = useFetch("/items");
+	const url = `${apiUrl}/items`;
+	const { data } = useFetch(url);
+
 	useEffect(() => {
 		if (data) {
 			getItems(data);
 		}
-		return () => {
-			mutate("http://localhost:5000/items");
-		};
-	}, [data, getItems]);
+	}, [data]);
 
 	if (!data) return <div>Loading...</div>;
 	return items.map((item) => <Item key={item._id} item={item} />);

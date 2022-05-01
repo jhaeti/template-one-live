@@ -1,5 +1,3 @@
-/* eslint-disable default-param-last */
-import { mutate } from "swr";
 import {
 	ADD_ITEM,
 	DELETE_ITEM,

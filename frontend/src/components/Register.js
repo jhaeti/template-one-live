@@ -98,4 +98,6 @@ const Register = ({ register }) => {
 	);
 };
 
-export default connect(null, { register })(Register);
+const mapDispatchToProps = { register };
+
+export default connect(null, mapDispatchToProps)(Register);

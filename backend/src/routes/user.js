@@ -2,7 +2,7 @@ const express = require("express");
 const auth = require("./middleware/auth");
 const { setCookie, clearCookie } = require("../controllers/cookies");
 
-const User = require("../models/user");
+const User = require("../db/models/user");
 
 const router = express.Router();
 
