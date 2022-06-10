@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // import Menutoggler from "./Menutoggler";
@@ -24,7 +25,16 @@ const Navbar = ({ isAuthenticated, logout, clearItems }) => {
 				<div className="nav__box">
 					<div className="nav__branding">
 						<Link href="/">
-							<a className="nav__logo">LOGO ICON</a>
+							<a className="nav__logo">
+								<Image
+									priority="true"
+									src="/icons/logo.svg"
+									alt="Add item Icon"
+									className=""
+									width="100"
+									height="100"
+								/>
+							</a>
 						</Link>
 					</div>
 					<ul className="nav__list">
