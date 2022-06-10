@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
 const app = require("../src/app");
-const Item = require("../src/models/item");
-const User = require("../src/models/user");
+const Item = require("../src/db/models/item");
+const User = require("../src/db/models/user");
 
 const userOneId = mongoose.Types.ObjectId();
 

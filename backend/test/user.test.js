@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const app = require("../src/app");
 
-const User = require("../src/models/user");
+const User = require("../src/db/models/user");
 
 const userOne = {
 	name: "Ibrahim",
