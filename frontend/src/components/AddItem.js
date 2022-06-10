@@ -1,10 +1,13 @@
 import Image from "next/image";
 import { useState } from "react";
 import { connect } from "react-redux";
+import { useSWRConfig } from "swr";
+import apiUrl from "../controllers/apiUrl";
 import { addItem } from "../redux/actions/itemAction";
 
-const AddItem = ({ isAuthenticated, addItem }) => {
+const AddItem = ({ isAuthenticated, addItem, items }) => {
 	const [item, setItem] = useState("");
+	const { mutate } = useSWRConfig();
 
 	const handleChange = (e) => {
 		setItem(e.target.value);
@@ -13,7 +16,11 @@ const AddItem = ({ isAuthenticated, addItem }) => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		addItem(item);
+
 		setItem("");
+		// NOTE: Updates the new item added with id from data base since the page was updated without the id.
+		// - This is done to enable delete item functionality work for the just added item else it would try to delete an item it the id whiles the id is not present
+		mutate(`${apiUrl}/items`, items);
 	};
 
 	return (
@@ -47,6 +54,7 @@ const AddItem = ({ isAuthenticated, addItem }) => {
 
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
+	items: state.item.items,
 });
 const mapDispatchToProps = { addItem };
 

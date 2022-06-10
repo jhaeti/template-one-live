@@ -28,14 +28,13 @@ export const addItem = (name) => (dispatch) => {
 	if (!name || "") {
 		dispatch(setMsg("Please type the name of your item"));
 	} else {
+		dispatch({
+			type: ADD_ITEM,
+			payload: { name },
+		});
 		axios
 			.post(`${apiUrl}/items`, { name }, { withCredentials: true })
-			.then((res) => {
-				dispatch({
-					type: ADD_ITEM,
-					payload: res.data,
-				});
-			})
+			.then()
 			// Notify user for login before action
 			.catch((err) => err && dispatch(setMsg("Login to add an item")));
 	}
