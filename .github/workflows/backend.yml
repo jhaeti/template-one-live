@@ -1,10 +1,10 @@
 name: BACKEND CI / CD
 
 on:
-    # push:
-    #     branches: [main]
-    #     paths:
-    #         - "backend/**"
+    push:
+        branches: [main]
+        paths:
+            - "backend/**"
     workflow_dispatch:
 
 jobs:
@@ -129,6 +129,7 @@ jobs:
                       docker-compose pull
                       docker stack deploy -c docker-compose.yml appv1
     CLEANING-CONTAINERS-AND-IMAGES-ON-SERVER:
+        environment: Deployment
         needs: Deploy-To-SERVER
         runs-on: ubuntu-latest
         steps:

@@ -1,10 +1,10 @@
 name: FRONTEND CI / CD
 
 on:
-    # push:
-    #     branches: [main]
-    #     paths:
-    #         - "frontend/**"
+    push:
+        branches: [main]
+        paths:
+            - "frontend/**"
     workflow_dispatch:
 
 jobs:
@@ -113,6 +113,7 @@ jobs:
                       docker-compose pull
                       docker stack deploy -c docker-compose.yml appv1
     Cleaning-containes-and-dangling-images:
+        environment: Deployment
         needs: Deploy-To-SERVER
         runs-on: ubuntu-latest
         steps:
