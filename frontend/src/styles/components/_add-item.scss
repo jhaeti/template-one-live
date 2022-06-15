@@ -10,18 +10,18 @@
 	&__input {
 		padding: 1rem 2rem;
 		border: none;
-		background-color: lighten($color-dark-1, 75%);
+		background-color: lighten($color-dark, 75%);
 		border-radius: 3px;
 		font-size: 1.7rem;
 		font-family: inherit;
-		color: lighten($color-dark-1, $amount: 10%);
+		color: lighten($color-dark, $amount: 10%);
 
 		&:disabled {
 			border: red;
 		}
 
 		&::-webkit-input-placeholder {
-			color: lighten($color-dark-1, $amount: 40%);
+			color: lighten($color-dark, $amount: 40%);
 		}
 	}
 
@@ -36,7 +36,7 @@
 
 		&:hover {
 			// transform: scale(1.08) translateY(-1px);
-			background-color: lighten($color-dark-1, 60%);
+			background-color: lighten($color-dark, 60%);
 		}
 	}
 

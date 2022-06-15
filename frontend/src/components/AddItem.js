@@ -15,7 +15,7 @@ const AddItem = ({ isAuthenticated, addItem, items }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		addItem(item);
+		addItem(isAuthenticated, item);
 
 		setItem("");
 		// NOTE: Updates the new item added with id from data base since the page was updated without the id.

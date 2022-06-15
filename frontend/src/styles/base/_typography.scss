@@ -1,0 +1,37 @@
+@font-face {
+	// HACK: Should use google fonts instead of serving locally
+	// Only serve locally in development or install locally and use that instead
+	font-family: JosefinSans;
+	src: url("/fonts/JosefinSans-Regular.ttf");
+	font-style: normal;
+	font-weight: 400;
+}
+
+body {
+	// NOTE: Use this when in production
+	// font-family: "Josefin Sans";
+
+	font-family: JosefinSans;
+	font-size: $default-font-size;
+}
+
+.heading-primary {
+	font-size: 6rem;
+	&--bold {
+		font-weight: 900;
+	}
+}
+
+.paragraph {
+	font-size: $default-font-size;
+	color: lighten($color-dark, 40%);
+
+	&--sm {
+		font-size: 1.4rem;
+	}
+}
+
+button,
+input {
+	font-family: inherit;
+}

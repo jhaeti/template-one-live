@@ -1,5 +1,5 @@
 import wrapper from "../redux/store";
-import "../../public/scss/style.scss";
+import "../styles/main.scss";
 
 const MyApp = ({ Component, pageProps }) => <Component {...pageProps} />;
 

@@ -1,0 +1,42 @@
+.nav-menu-btn {
+	padding: 5px 5px 0 5px;
+	border: 2px solid $color-primary-2;
+	cursor: pointer;
+	background-color: transparent;
+	position: absolute;
+	border-radius: 3px;
+	top: 1.5rem;
+	right: 1.5rem;
+	z-index: 30;
+	transition: all 0.5s ease-in;
+	display: none;
+	@include respond(tab-port) {
+		display: block;
+	}
+
+	&__line {
+		width: 24px;
+		height: 2px;
+		background-color: $color-primary-2;
+		border-radius: 1rem;
+		margin-bottom: 5px;
+		transition: all 0.3s ease-in;
+	}
+
+	&.close {
+		border: transparent;
+		// transform: rotate(90deg);
+		.nav-menu-btn__line {
+			background-color: $color-light-2;
+			&:nth-child(1) {
+				opacity: 0;
+			}
+			&:nth-child(2) {
+				transform: translate(0, 0) rotate(135deg);
+			}
+			&:nth-child(3) {
+				transform: translate(0, -7px) rotate(-135deg);
+			}
+		}
+	}
+}

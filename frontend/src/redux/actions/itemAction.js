@@ -24,8 +24,10 @@ export const clearItems = () => ({ type: CLEAR_ITEMS });
 export const loadingItems = () => ({ type: IS_LOADING });
 
 // Try to add an item to database
-export const addItem = (name) => (dispatch) => {
-	if (!name || "") {
+export const addItem = (isAuthenticated, name) => (dispatch) => {
+	if (!isAuthenticated) {
+		dispatch(setMsg("Please login to add item"));
+	} else if (!name) {
 		dispatch(setMsg("Please type the name of your item"));
 	} else {
 		dispatch({

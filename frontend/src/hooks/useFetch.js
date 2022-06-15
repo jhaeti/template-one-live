@@ -6,9 +6,6 @@ const fetcher = (url) =>
 
 const useFetch = (url) => {
 	const { data, error, mutate } = useSWR(url, fetcher);
-	// if (error) {
-	// 	mutate(initialState);
-	// }
 	return { data, error, mutate };
 };
 
