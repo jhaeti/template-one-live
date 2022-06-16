@@ -92,9 +92,28 @@
 		width: 100%;
 		height: 4rem;
 		margin-bottom: 1rem;
-		// margin: 1rem 0 0;
 		position: relative;
-		// overflow: hidden;
+		transition: all 0.3s ease-in;
+
+		// Animation for Component enterig the UI
+		&-enter {
+			opacity: 0;
+			transform: translate(0, -50%);
+			&-done {
+				opacity: 1;
+				transform: translate(0, 0);
+				transition: opacity 300ms, transform 300ms;
+			}
+		}
+		// Animation for component leaving the UI
+		&-exit {
+			opacity: 1;
+			&-done {
+				opacity: 0;
+				transform: translate(0, -50%);
+				transition: opacity 300ms, transform 300ms;
+			}
+		}
 	}
 
 	&__label {

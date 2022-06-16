@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import { CSSTransition } from "react-transition-group";
 import { login, register } from "../../redux/actions/userAction";
 
 const LoginBoxRight = ({ login, register }) => {
 	const [state, setState] = useState({ email: "", password: "", name: "" });
 	const [route, setRoute] = useState("login");
+	const [inProp, setInProp] = useState(false);
+
+	useEffect(() => {
+		setInProp(route === "register");
+	}, [route]);
 
 	const handleChange = (e) => {
 		setState({ ...state, [e.target.name]: e.target.value });
@@ -37,7 +43,11 @@ const LoginBoxRight = ({ login, register }) => {
 					</div>
 				</div>
 				<div className="form-body">
-					{route === "register" && (
+					<CSSTransition
+						in={inProp}
+						timeout={200}
+						classNames="form-control"
+					>
 						<div className="form-control">
 							<input
 								className="login-box__input"
@@ -48,6 +58,7 @@ const LoginBoxRight = ({ login, register }) => {
 								value={state.name}
 								required
 							/>
+
 							<label
 								htmlFor="name"
 								className={`login-box__label ${
@@ -57,7 +68,7 @@ const LoginBoxRight = ({ login, register }) => {
 								Name
 							</label>
 						</div>
-					)}
+					</CSSTransition>
 
 					<div className="form-control">
 						<input
