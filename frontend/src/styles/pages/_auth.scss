@@ -94,7 +94,7 @@
 		margin-bottom: 1rem;
 		position: relative;
 		transition: all 0.3s ease-in;
-		// Making first element invisible
+		// Making first element invisible on initial page load
 		// Done this way to give the rest of the element higher specificity while have a lower specificy for the first element in other for animation for entering and leaving the UI to work
 		opacity: 0;
 		&:not(:first-child) {
