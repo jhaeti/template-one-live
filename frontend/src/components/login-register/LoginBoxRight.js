@@ -56,7 +56,7 @@ const LoginBoxRight = ({ login, register }) => {
 								name="name"
 								onChange={handleChange}
 								value={state.name}
-								required
+								required={inProp}
 							/>
 
 							<label
