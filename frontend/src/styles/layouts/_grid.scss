@@ -27,6 +27,7 @@
 
 .col {
 	display: flex;
+	height: 100%;
 	flex-direction: column;
 	&--center {
 		justify-content: center;

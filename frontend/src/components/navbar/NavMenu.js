@@ -49,7 +49,6 @@ const NavMenu = ({ isAuthenticated, user, logout, clearItems }) => {
 							</Link>
 						</li>
 						<li className="nav__item">
-							{/* FIXME: Should be a dynamic page */}
 							<Link href="/cart">
 								<a className={isCurrentPage("/cart")}>Cart</a>
 							</Link>

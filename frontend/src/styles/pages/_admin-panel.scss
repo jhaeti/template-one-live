@@ -1,0 +1,37 @@
+.product-box,
+.user-box {
+	&:link,
+	&:visited {
+		color: $color-light-1;
+		font-size: 3.5rem;
+		margin: 1.5rem;
+		text-decoration: none;
+		border-radius: 3px;
+		text-transform: uppercase;
+		box-shadow: 1rem 2rem 3rem rgba($color-black, 0.3);
+		height: 30rem;
+		width: 30rem;
+		@include respond(phone) {
+			height: 20rem;
+			width: 80%;
+		}
+
+		.row {
+			height: 100%;
+		}
+	}
+}
+
+.product-box {
+	background-color: $color-primary-2;
+}
+
+.user-box {
+	background-color: $color-dark;
+}
+
+.admin-panel > .row {
+	@include respond(phone) {
+		flex-direction: column;
+	}
+}
