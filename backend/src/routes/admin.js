@@ -8,6 +8,7 @@ const adminAuth = require("./middleware/adminAuth");
 
 const router = express.Router();
 
+// Get all user from the database
 router.get("/admin/users", auth, adminAuth, async (req, res) => {
 	try {
 		const users = await User.find();
@@ -17,12 +18,34 @@ router.get("/admin/users", auth, adminAuth, async (req, res) => {
 	}
 });
 
+// Get all items from database
 router.get("/admin/items", auth, adminAuth, async (req, res) => {
 	try {
 		const items = await Item.find();
 		res.send(items);
 	} catch (e) {
 		res.sendStatus(500);
+	}
+});
+
+// Count number of Items in database
+router.get("/admin/items-count", auth, adminAuth, async (req, res) => {
+	try {
+		const count = await Item.countDocuments();
+		if (!count) throw new Error("Server side error");
+		res.json(count);
+	} catch (e) {
+		res.status(500).json(e.message);
+	}
+});
+// Count number of Users in database
+router.get("/admin/users-count", auth, adminAuth, async (req, res) => {
+	try {
+		const count = await User.countDocuments();
+		if (!count) throw new Error("Server side error");
+		res.json(count);
+	} catch (e) {
+		res.status(500).json(e.message);
 	}
 });
 
