@@ -13,7 +13,7 @@ const Admin = () => {
 	return (
 		<div className="container admin-panel">
 			<div className="row row--center row--v-center col-fill-between">
-				<Link href="/products-management">
+				<Link href="/admin-products-management">
 					<a className="product-box">
 						<div className="row row--center row--v-center">
 							<div>
