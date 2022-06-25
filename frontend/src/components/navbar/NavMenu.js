@@ -57,9 +57,12 @@ const NavMenu = ({ isAuthenticated, user, logout, clearItems }) => {
 							<li className="nav__item">
 								<Link href="/admin-panel">
 									<a
-										className={isCurrentPage(
+										className={`${isCurrentPage(
 											"/admin-panel"
-										)}
+										)} ${
+											/^\/admin/.test(router.pathname) &&
+											"active"
+										}`}
 									>
 										Admin panel
 									</a>
