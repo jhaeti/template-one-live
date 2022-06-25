@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import Layout from "../components/Layout";
-import Operations from "../components/products-management/operations";
+import Operations from "../components/products-management/Operations";
 import ProductsTable from "../components/products-management/ProductsTable";
 import useCheckAdminUserOnRefresh from "../hooks/useCheckAdminUserOnRefresh";
 
