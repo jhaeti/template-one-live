@@ -10,8 +10,8 @@ const NavBranding = () => (
 					src="/icons/logo.svg"
 					alt="Add item Icon"
 					className="logo-svg"
-					width="100"
-					height="100"
+					width="150"
+					height="38"
 				/>
 			</a>
 		</Link>
