@@ -9,6 +9,7 @@
 		font-size: $default-font-size;
 		padding: 0.7rem 1.2rem;
 		transition: all ease-in-out 0.2s;
+		cursor: pointer;
 	}
 
 	&--danger {
@@ -16,7 +17,6 @@
 
 		color: $color-light-1;
 		border: 0.2rem solid $color-danger;
-		cursor: pointer;
 
 		@include respond(phone) {
 			border-width: 0.3rem;
