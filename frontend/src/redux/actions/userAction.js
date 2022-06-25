@@ -73,7 +73,7 @@ export const register = (user) => (dispatch) => {
 		.catch((err) => {
 			dispatch({
 				type: REGISTER_FAIL,
-				payload: err.response,
+				payload: err.response.data,
 			});
 		});
 };
