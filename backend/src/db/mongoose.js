@@ -15,7 +15,7 @@ mongoose
 		useCreateIndex: true,
 	})
 	.then(() => {
-		console.log("Mongodb Connected...");
+		console.info("Mongodb Connected...");
 		// Creating an a default admin for the database
 		const {
 			DEFAULT_ADMIN_NAME: name,
@@ -44,7 +44,7 @@ mongoose
 					await defaultAdminUser.save();
 				}
 			})
-			.catch((e) => console.log(e));
-		console.log("Admin is Present...");
+			.catch((e) => console.info(e));
+		console.info("Admin is Present...");
 	})
-	.catch((e) => console.log("Not connected to mongodb", e));
+	.catch((e) => console.warn("Not connected to mongodb", e));
