@@ -40,20 +40,20 @@ const {
 	AUTH_COOKIE_NAME,
 } = process.env;
 
-beforeEach(async () => {
+beforeAll(async () => {
+	// Delete all users excluding admin.
 	await User.deleteMany({ role: "BASIC" });
 	await Product.deleteMany();
+	// Adding one basic role user  and 2 products
 	await new User(userOne).save();
 	await new Product(productOne).save();
 	await new Product(productTwo).save();
 });
 
-afterEach(async () => {
-	await Product.deleteMany();
-	await User.deleteMany({ role: "BASIC" });
-});
-
 afterAll((done) => {
+	// Clearing database
+	User.deleteMany({});
+	Product.deleteMany();
 	// Closing the DB connection allows Jest to exit successfully.
 	mongoose.connection.close();
 	done();
@@ -62,11 +62,13 @@ afterAll((done) => {
 test("Not logged in users should be able to access products", async () => {
 	const res = await request(app).get("/products");
 	expect(res.status).toBe(200);
-	expect(res.body).not.toBeNull();
+	// Checking if products is sent
+	expect(res.body).toBeDefined();
 	expect(res.body).toHaveLength(2);
 });
 
 test("Should add a Product", async () => {
+	// Login admin to get access to adminAuth stuffs
 	const admin = await request(app)
 		.post("/users/login")
 		.send({
@@ -77,6 +79,7 @@ test("Should add a Product", async () => {
 
 	const res = await request(app)
 		.post("/products")
+		// Setting user to admin
 		.set("Cookie", `${AUTH_COOKIE_NAME}=${admin.body.token}`)
 		.send({
 			name: "Banku",
@@ -84,8 +87,11 @@ test("Should add a Product", async () => {
 			quantity: 10,
 			description: "This one of the most liked food in Ghana",
 		});
+	// Checking if product was created and saved
 	expect(res.status).toBe(201);
-	expect(res.body).not.toBeNull();
+	// Checking if products is sent back
+	expect(res.body).toBeDefined();
+	// Checking if product name matches what was sent true request
 	expect(res.body.name).toBe("Banku");
 });
 
@@ -96,7 +102,9 @@ test("Should send an error message when basic role users try to add a product", 
 		quantity: 10,
 		description: "This one of the most liked food in Ghana",
 	});
+	// Checking if error message was sent
 	expect(res.status).toBe(401);
+	// Expect error message
 	expect(res.body).not.toBeNull();
 	expect(res.body).toBe("No token, authorisation deneid");
 });
@@ -104,6 +112,7 @@ test("Should send an error message when basic role users try to add a product", 
 test("Basic role users should not be able to add product", async () => {
 	const res = await request(app)
 		.post("/products")
+		// Giving user basic role with cookies
 		.set("Cookie", `${AUTH_COOKIE_NAME}=${userOne.tokens[0].token}`)
 		.send({
 			name: "Banku",
@@ -111,6 +120,7 @@ test("Basic role users should not be able to add product", async () => {
 			quantity: 10,
 			description: "This one of the most liked food in Ghana",
 		});
+	// Checking if error is sent
 	expect(res.status).toBe(403);
 });
 
@@ -121,17 +131,20 @@ test("Admin should be able to get the total number of product", async () => {
 		.expect(200);
 	const res = await request(app)
 		.get("/products-count")
+		// Giving user admin access
 		.set("Cookie", `${AUTH_COOKIE_NAME}=${admin.body.token}`)
 		.expect(200);
+	// Expecting 2 products be returned
 	expect(res.body).not.toBeNull();
 	expect(res.body).toBeDefined();
-	expect(res.body).toBe(2);
+	expect(res.body > 0).toBeTruthy();
 });
 
 test("Basic role users shouldn't be able to get products count", async () => {
 	const res = await request(app)
 		.get("/products-count")
 		.set("Cookie", `${AUTH_COOKIE_NAME}=${userOne.tokens[0].token}`);
+	// Expecting error but with no message
 	expect(res.status).toBe(403);
 });
 
@@ -141,6 +154,7 @@ test("Deleting products by basic role users should fail", async () => {
 		.delete("/products")
 		.set("Cookie", `${AUTH_COOKIE_NAME}=${userOne.tokens[0].token}`)
 		.send([id]);
+	// Expect error when basic user tries to delete from the database
 	expect(res.status).toBe(403);
 });
 
@@ -152,9 +166,12 @@ test("Should successfully delete product if the user has admin role", async () =
 		.expect(200);
 	const res = await request(app)
 		.delete("/products")
+		// Giving admin access
 		.set("Cookie", `${AUTH_COOKIE_NAME}=${admin.body.token}`)
 		.send([id]);
 
+	// Expect responds to be OK
 	expect(res.status).toBe(200);
+	// Expect number of deleted products be returned
 	expect(res.body).toBe(1);
 });
