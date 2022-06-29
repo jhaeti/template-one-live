@@ -31,15 +31,17 @@ const userSchema = new mongoose.Schema({
 	],
 	role: {
 		type: String,
-		default: "BASIC",
+		default: (v) => {
+			if (v !== "ADMIN") return "BASIC";
+		},
 		enum: ["BASIC", "ADMIN"],
 		required: true,
 	},
 });
 
 // Virtual item field for the user
-userSchema.virtual("items", {
-	ref: "Item",
+userSchema.virtual("products", {
+	ref: "Product",
 	localField: "_id",
 	foreignField: "owner",
 });

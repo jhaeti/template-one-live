@@ -1,5 +1,6 @@
 const express = require("express");
 const auth = require("./middleware/auth");
+const adminAuth = require("./middleware/adminAuth");
 const { setCookie, clearCookie } = require("../controllers/cookies");
 
 const User = require("../db/models/user");
@@ -7,6 +8,7 @@ const User = require("../db/models/user");
 const router = express.Router();
 
 // Register Route
+// @return { token, user}
 router.post("/users/register", async (req, res) => {
 	const { name, email, password } = req.body;
 
@@ -19,7 +21,7 @@ router.post("/users/register", async (req, res) => {
 		//   Check whether user already exist
 		const previousUser = await User.findOne({ email });
 		if (previousUser) {
-			return res.status(400).json("Email is taken. Use another email.");
+			return res.status(400).json("Invalid Credentials");
 		}
 
 		// Create new User if user does not exist
@@ -40,6 +42,7 @@ router.post("/users/register", async (req, res) => {
 });
 
 // Login Route
+// @return { token, user}
 router.post("/users/login", async (req, res) => {
 	try {
 		const { email, password } = req.body;
@@ -58,12 +61,14 @@ router.post("/users/login", async (req, res) => {
 });
 
 // Getting user just from having correct cookies set
+// @return { token, user}
 router.get("/users/me", auth, (req, res) => {
 	const { token, user } = req;
 	res.json({ token, user });
 });
 
 // Delete self from the databse
+// @return {user}
 router.delete("/users/me", auth, async (req, res) => {
 	const user = await req.user.remove();
 	clearCookie(res, process.env.AUTH_COOKIE_NAME);
@@ -71,12 +76,46 @@ router.delete("/users/me", auth, async (req, res) => {
 });
 
 // Handling Logout functionality
+// @return a status code 200
 router.get("/users/logout", auth, async (req, res) => {
 	const { user } = req;
 	await user.removeToken(req.token);
 	// Clear cookies from the browser
 	clearCookie(res, process.env.AUTH_COOKIE_NAME);
 	res.sendStatus(200);
+});
+
+// Get all user from the database
+router.get("/users", auth, adminAuth, async (req, res) => {
+	try {
+		const users = await User.find();
+		res.send(users);
+	} catch (e) {
+		res.sendStatus(500);
+	}
+});
+
+// Count number of Users in database
+// @returns a number
+router.get("/users-count", auth, adminAuth, async (req, res) => {
+	try {
+		const count = await User.countDocuments();
+		res.json(count);
+	} catch (e) {
+		res.sendStatus(500);
+	}
+});
+
+// Delete any user by their id
+// This is only accessible only by admins
+router.delete("/users", auth, adminAuth, async (req, res) => {
+	try {
+		const id = req.body;
+		const { deletedCount } = await User.deleteMany({ _id: { $in: id } });
+		res.status(200).json(deletedCount);
+	} catch (e) {
+		res.sendStatus(500);
+	}
 });
 
 module.exports = router;

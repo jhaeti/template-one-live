@@ -6,31 +6,26 @@ const app = require("../src/app");
 
 const User = require("../src/db/models/user");
 
+const userOneId = mongoose.Types.ObjectId();
 const userOne = {
-	name: "Ibrahim",
-	email: "ibrahim@example.com",
-	password: "ibrahim123",
-};
-
-const userTwoId = mongoose.Types.ObjectId();
-const userTwo = {
-	_id: userTwoId,
+	_id: userOneId,
 	name: "Ibrahim123",
 	email: "ibrahim123@example.com",
 	password: "ibrahim123",
 	tokens: [
-		{ token: jwt.sign({ id: userTwoId }, process.env.JWT_SECRET_KEY) },
+		{ token: jwt.sign({ id: userOneId }, process.env.JWT_SECRET_KEY) },
 	],
 };
 beforeEach(async () => {
-	await User.deleteMany();
+	await User.deleteMany({ role: "BASIC" });
 	await new User(userOne).save();
-	await new User(userTwo).save();
+});
+afterEach(async () => {
+	await User.deleteMany({ role: "BASIC" });
 });
 
 afterAll((done) => {
 	// Closing the DB connection allows Jest to exit successfully.
-
 	mongoose.connection.close();
 	done();
 });
@@ -57,7 +52,7 @@ test("Should fail to register a user if the user already exist!", async () => {
 		.send(userOne)
 		.expect(400);
 	expect(res.body).not.toBeNull();
-	expect(res.body).toBe("Email is taken. Use another email.");
+	expect(res.body).toBe("Invalid Credentials");
 });
 
 test("Should register a new User", async () => {
@@ -96,12 +91,12 @@ test("Should login user", async () => {
 	expect(res.status).toBe(200);
 });
 
-test("Should not login user", async () => {
+test("Should not login user if email is not found", async () => {
 	const res = await request(app).post("/users/login").send({
 		email: "168896@example.com",
 		password: userOne.password,
 	});
-	expect(res.statusCode).toBe(404);
+	expect(res.status).toBe(404);
 });
 
 test("Should not login user if password does not match", async () => {
@@ -119,7 +114,7 @@ test("Should fetch user data if cookie is set correctly", async () => {
 		.get("/users/me")
 		.set(
 			"Cookie",
-			`${process.env.AUTH_COOKIE_NAME}=${userTwo.tokens[0].token}`
+			`${process.env.AUTH_COOKIE_NAME}=${userOne.tokens[0].token}`
 		)
 		.expect(200);
 
