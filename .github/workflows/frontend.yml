@@ -20,7 +20,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
-            - run: npm ci # Install dependencies
+            - run: npm i # Install dependencies
             - run: npm run build # Build from source code
               env:
                   NEXT_PUBLIC_API_URL: ${{secrets.NEXT_PUBLIC_API_URL}}
