@@ -41,7 +41,7 @@ beforeAll(async () => {
 	// Save users for testing
 	await new User(userOne).save();
 	await new User(userTwo).save();
-	admin = await await request(app)
+	admin = await request(app)
 		.post("/users/login")
 		.send({ email, password })
 		.expect(200);
