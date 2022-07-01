@@ -4,7 +4,7 @@ import { setMsg } from "./userAction";
 export const GET_PRODUCTS = "GET_PRODUCTS";
 export const IS_LOADING = "IS_LOADING";
 export const ADD_PRODUCT = "ADD_PRODUCT";
-export const DELETE_PRODUCT = "DELETE_PRODUCT";
+export const DELETE_PRODUCTS = "DELETE_PRODUCTS";
 export const CLEAR_PRODUCTS = "CLEAR_PRODUCTS";
 
 // Get all items in database
@@ -43,7 +43,7 @@ export const deleteProduct = (id) => (dispatch) => {
 		.delete(`/api/products/${id}`, { withCredentials: true })
 		.then(() => {
 			dispatch({
-				type: DELETE_PRODUCT,
+				type: DELETE_PRODUCTS,
 				payload: id,
 			});
 		})

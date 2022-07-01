@@ -1,17 +1,17 @@
-@font-face {
-	// HACK: Should use google fonts instead of serving locally
-	// Only serve locally in development or install locally and use that instead
-	font-family: JosefinSans;
-	src: url("/fonts/JosefinSans-Regular.ttf");
-	font-style: normal;
-	font-weight: 400;
-}
+// @font-face {
+// 	// HACK: Should use google fonts instead of serving locally
+// 	// Only serve locally in development or install locally and use that instead
+// 	font-family: JosefinSans;
+// 	src: url("/fonts/JosefinSans-Regular.ttf");
+// 	font-style: normal;
+// 	font-weight: 400;
+// }
 
 body {
 	// NOTE: Use this when in production
-	// font-family: "Josefin Sans";
+	font-family: "Josefin Sans";
 
-	font-family: JosefinSans;
+	// font-family: JosefinSans;
 	font-size: $default-font-size;
 }
 
