@@ -1,5 +1,5 @@
 import Image from "next/image";
-import pizza from "../../../public/imgs/login-pizza.jpg";
+import pizza from "https://raw.githubusercontent.com/jhaeti/template-one-live/main/frontend/public/imgs/login-pizza.jpg";
 
 const LoginBoxLeft = () => (
 	<div className="login-box__left">
