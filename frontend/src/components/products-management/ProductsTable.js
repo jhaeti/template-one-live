@@ -1,17 +1,22 @@
+import ProductList from "./ProductList";
+
 const ProductsTable = () => (
 	<table className="products-table">
 		<thead>
 			<tr>
-				<td></td>
-				<td>Id</td>
-				<td>Name</td>
-				<td>Quantity</td>
-				<td>Sold</td>
-				<td>Likes</td>
-				<td>Price</td>
-				<td>Operations</td>
+				{/* <th></th> */}
+				<th>Sn</th>
+				<th>Name</th>
+				<th>Quantity</th>
+				<th>Sold</th>
+				{/* <th>Likes</th> */}
+				<th>Price</th>
+				<th>Operations</th>
 			</tr>
 		</thead>
+		<tbody>
+			<ProductList />
+		</tbody>
 	</table>
 );
 

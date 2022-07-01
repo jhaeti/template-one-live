@@ -3,21 +3,20 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSWRConfig } from "swr";
 import { connect } from "react-redux";
-import { clearItems } from "../../redux/actions/itemAction";
 import { logout } from "../../redux/actions/userAction";
-import apiUrl from "../../controllers/apiUrl";
 import NavMenuBtn from "./NavMenuBtn";
 
-const NavMenu = ({ isAuthenticated, user, logout, clearItems }) => {
+const NavMenu = ({ isAuthenticated, user, logout }) => {
 	const [showMenu, setShowMenu] = useState(false);
 	const { mutate } = useSWRConfig();
 	const router = useRouter();
-	const onLogoutClick = () => {
-		logout();
-		clearItems();
-		mutate(`${apiUrl}/items`, [], { rollbackOnError: false });
-		mutate(`${apiUrl}/users/me`, null, { rollbackOnError: false });
+	const onLogoutClick = async () => {
+		// Log user out
+		await logout();
+		// CLear cache else data would still be in cache
+		await mutate(`/api/users/me`, null, { rollbackOnError: false });
 	};
+	// This is just for adding syles for active class
 	const isCurrentPage = (path) =>
 		router.pathname === path ? "active nav__link" : "nav__link";
 	return (
@@ -89,9 +88,8 @@ const NavMenu = ({ isAuthenticated, user, logout, clearItems }) => {
 
 const mapStateToProps = (state) => ({
 	isAuthenticated: state.auth.isAuthenticated,
-	items: state.item.items,
 	user: state.auth.user,
 });
-const mapDispatchToProps = { logout, clearItems };
+const mapDispatchToProps = { logout };
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavMenu);

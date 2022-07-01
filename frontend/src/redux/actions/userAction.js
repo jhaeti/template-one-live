@@ -42,12 +42,11 @@ export const login = (user) => (dispatch) => {
 export const setMsg = (msg) => ({ type: SET_MSG, payload: msg });
 
 // Logout a user
-export const logout = () => (dispatch) => {
-	axios
-		.get(`${apiUrl}/users/logout`, {
-			withCredentials: true,
-		})
-		.then(() => dispatch({ type: LOGOUT_SUCCESS }));
+export const logout = () => async (dispatch) => {
+	await axios.get(`/api/users/logout`, {
+		withCredentials: true,
+	});
+	dispatch({ type: LOGOUT_SUCCESS });
 };
 
 // Attempt to load user on page reload

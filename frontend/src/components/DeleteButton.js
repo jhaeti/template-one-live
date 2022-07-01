@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
-import { deleteItem } from "../redux/actions/itemAction";
+import { deleteProduct } from "../redux/actions/productAction";
 
-const DeleteButton = ({ deleteItem, id }) => (
-	<button onClick={() => deleteItem(id)} className="btn btn--danger">
+const DeleteButton = ({ deleteProdut, id }) => (
+	<button onClick={() => deleteProdut(id)} className="btn btn--danger">
 		Delete Item
 	</button>
 );
 
-const mapDispatchToProps = { deleteItem };
+const mapDispatchToProps = { deleteProduct };
 
 export default connect(null, mapDispatchToProps)(DeleteButton);

@@ -1,14 +1,12 @@
 import Link from "next/link";
 import useFetch from "../hooks/useFetch";
-import apiUrl from "../controllers/apiUrl";
 
 const Admin = () => {
-	const { data: itemsCount, error: itemsError } = useFetch(
-		`${apiUrl}/admin/items-count`
+	const { data: productsCount, error: productsError } = useFetch(
+		"/api/products-count"
 	);
-	const { data: usersCount, error: usersError } = useFetch(
-		`${apiUrl}/admin/users-count`
-	);
+	const { data: usersCount, error: usersError } =
+		useFetch("/api/users-count");
 
 	return (
 		<div className="container admin-panel">
@@ -17,8 +15,10 @@ const Admin = () => {
 					<a className="product-box">
 						<div className="row row--center row--v-center">
 							<div>
-								{(!itemsCount && !itemsError && "Loading") ||
-									itemsCount}{" "}
+								{(!productsCount &&
+									!productsError &&
+									"Loading") ||
+									productsCount}{" "}
 								Products
 							</div>
 						</div>

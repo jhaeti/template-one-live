@@ -22,6 +22,11 @@ body {
 	}
 }
 
+.title {
+	font-weight: 400;
+	letter-spacing: 0.2rem;
+}
+
 .paragraph {
 	font-size: $default-font-size;
 	color: lighten($color-dark, 40%);

@@ -6,11 +6,11 @@ import Layout from "../components/Layout";
 
 import useFetch from "../hooks/useFetch";
 
-import Items from "../components/Items";
+import Products from "../components/Products";
 import AddItem from "../components/AddItem";
 import apiUrl from "../controllers/apiUrl";
 
-const Index = ({ loadUser, isAuthenticated }) => {
+const Index = ({ loadUser }) => {
 	const url = `${apiUrl}/users/me`;
 
 	const { data } = useFetch(url);
@@ -23,14 +23,13 @@ const Index = ({ loadUser, isAuthenticated }) => {
 	return (
 		<Layout title="Boilerplate" description="Index for the Boilerplate">
 			<AddItem />
-			<div className="container">{isAuthenticated && <Items />}</div>
+			<div className="container">
+				<Products />
+			</div>
 		</Layout>
 	);
 };
 
-const mapStateToProps = (state) => ({
-	isAuthenticated: state.auth.isAuthenticated,
-});
 const mapDispatchToProps = { loadUser };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index);
+export default connect(null, mapDispatchToProps)(Index);
