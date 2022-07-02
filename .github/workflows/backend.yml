@@ -127,18 +127,18 @@ jobs:
                       cd app
                       docker-compose pull backend
                       docker stack deploy -c docker-compose.yml appv1
-    # CLEANING-CONTAINERS-AND-IMAGES-ON-SERVER:
-    #     environment: Deployment
-    #     needs: Deploy-To-SERVER
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #         - uses: actions/checkout@v2
-    #         - name: Removing All dangling images and containers after updating the images to latest
-    #           uses: appleboy/ssh-action@master
-    #           with:
-    #               host: ${{ secrets.HOST }}
-    #               username: ${{ secrets.HOST_USER }}
-    #               password: ${{ secrets.HOST_KEY }}
-    #               script: |
-    #                   docker rm $(docker ps -a -f status=exited)
-    #                   docker image prune -a -f
+    CLEANING-CONTAINERS-AND-IMAGES-ON-SERVER:
+        environment: Deployment
+        needs: Deploy-To-SERVER
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Removing All dangling images and containers after updating the images to latest
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.HOST_USER }}
+                  password: ${{ secrets.HOST_KEY }}
+                  script: |
+                      docker rm $(docker ps -a -f status=exited)
+                      docker image prune -a -f
