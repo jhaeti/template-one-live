@@ -110,7 +110,7 @@ jobs:
                   script: |
                       cd app
                       docker-compose pull frontend
-                      docker stack deploy -c docker-compose.yml appv1
+                      docker service update appv1_frontend
     Cleaning-containes-and-dangling-images:
         environment: Deployment
         needs: Deploy-To-SERVER

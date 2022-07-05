@@ -126,7 +126,7 @@ jobs:
                   script: |
                       cd app
                       docker-compose pull backend
-                      docker stack deploy -c docker-compose.yml appv1
+                      docker service update appv1_backend
     CLEANING-CONTAINERS-AND-IMAGES-ON-SERVER:
         environment: Deployment
         needs: Deploy-To-SERVER
