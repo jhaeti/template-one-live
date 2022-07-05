@@ -1,15 +1,15 @@
 import Image from "next/image";
+import loginPizza from "../../../public/imgs/loginPizza.jpg";
 
 const LoginBoxLeft = () => (
 	<div className="login-box__left">
 		<Image
 			className="login-pizza"
 			priority="true"
-			src="/imgs/loginPizza.jpg"
+			src={loginPizza}
 			alt="Pizza"
-			layout="intrinsic"
-			width={540}
-			height={640}
+			placeholder="blur"
+			sizes="50vw"
 		/>
 	</div>
 );

@@ -18,8 +18,8 @@ const AddItem = ({ isAuthenticated, addProduct, products }) => {
 		addProduct(isAuthenticated, item);
 
 		setItem("");
-		// NOTE: Updates the new item added with id from data base since the page was updated without the id.
-		// - This is done to enable delete item functionality work for the just added item else it would try to delete an item it the id whiles the id is not present
+		// - This updates the new product added with id from data base since the page was updated without the id.
+		// - This is done to enable delete product functionality work for the just added item else it would try to delete an item it the id whiles the id is not present
 		mutate(`${apiUrl}/products`, products);
 	};
 
